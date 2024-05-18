@@ -62,3 +62,34 @@ map.addLayer(
     name: 'stations'
   })
 );
+
+// display user position
+// create VectorLayer for user position
+const source = new VectorSource();
+const layer = new VectorLayer({
+  source: source,
+  name: 'userposition',
+});
+map.addLayer(layer);
+if (navigator.geolocation) {
+  // get user position from GPS
+  navigator.geolocation.watchPosition(
+    function (pos) {
+      const coords = [pos.coords.longitude, pos.coords.latitude];
+      const accuracy = circular(coords, pos.coords.accuracy);
+      source.clear(true);
+      source.addFeatures([
+        new Feature(
+          accuracy.transform('EPSG:4326', map.getView().getProjection())
+        ),
+        new Feature(new Point(fromLonLat(coords))),
+      ]);
+    },
+    // function (error) {
+    //   alert(`ERROR: ${error.message}`);
+    // },
+    {
+      enableHighAccuracy: true,
+    }
+  );
+}
