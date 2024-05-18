@@ -71,8 +71,8 @@ const layer = new VectorLayer({
   name: 'userposition',
 });
 map.addLayer(layer);
+// get user position from GPS
 if (navigator.geolocation) {
-  // get user position from GPS
   navigator.geolocation.watchPosition(
     function (pos) {
       const coords = [pos.coords.longitude, pos.coords.latitude];
@@ -85,9 +85,9 @@ if (navigator.geolocation) {
         new Feature(new Point(fromLonLat(coords))),
       ]);
     },
-    // function (error) {
-    //   alert(`ERROR: ${error.message}`);
-    // },
+    function (error) {
+      alert(`ERROR: ${error.message}`);
+    },
     {
       enableHighAccuracy: true,
     }
